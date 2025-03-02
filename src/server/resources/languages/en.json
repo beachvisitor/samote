@@ -1,0 +1,79 @@
+{
+  "name": "English",
+  "app": {
+    "start": "Start",
+    "stop": "Stop",
+    "reload": "Reload",
+    "users": {
+      "ip": "Address",
+      "system": "System",
+      "browser": "Browser",
+      "modify": {
+        "label": "Modify",
+        "view": "Viewing",
+        "touch": "Touches",
+        "keyboard": "Keyboard",
+        "auth": "Authorized"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "open": {
+        "label": "Open",
+        "description": "Open the programme after switching on the computer"
+      },
+      "start": {
+        "label": "Start",
+        "description": "Start the stream after opening the program"
+      },
+      "password": "Password",
+      "language": {
+        "label": "Language",
+        "auto": "System"
+      },
+      "theme": {
+        "label": "Theme",
+        "auto": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "arguments": "Arguments",
+      "reset": "Reset",
+      "save": "Save"
+    }
+  },
+  "client": {
+    "auth": {
+      "title": "Authorization",
+      "description": "Enter your password from the settings",
+      "password": "Password"
+    }
+  },
+  "messages": {
+    "start": {
+      "success": "The stream has started!",
+      "error": "Could not start the stream!"
+    },
+    "stop": {
+      "success": "The stream has stopped!",
+      "error": "Could not stop the stream!"
+    },
+    "reload": {
+      "success": "The stream has been reloaded!",
+      "error": "Could not reload the stream!"
+    },
+    "save": {
+      "success": "The settings have been saved!",
+      "error": "Could not save the settings!"
+    },
+    "auth": {
+      "wrong": "Wrong password!",
+      "success": "You have been successfully authorized!",
+      "error": "Could not authorized!"
+    },
+    "modify": {
+      "success": "Changes applied!",
+      "error": "Could not apply changes!"
+    }
+  }
+}

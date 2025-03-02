@@ -1,0 +1,223 @@
+{
+  "name": "Українська",
+  "backquote": {
+    "default": "'",
+    "shift": "₴"
+  },
+  "1": {
+    "default": "1",
+    "shift": "!"
+  },
+  "2": {
+    "default": "2",
+    "shift": "\""
+  },
+  "3": {
+    "default": "3",
+    "shift": "№"
+  },
+  "4": {
+    "default": "4",
+    "shift": ";"
+  },
+  "5": {
+    "default": "5",
+    "shift": "%"
+  },
+  "6": {
+    "default": "6",
+    "shift": ":"
+  },
+  "7": {
+    "default": "7",
+    "shift": "?"
+  },
+  "8": {
+    "default": "8",
+    "shift": "*"
+  },
+  "9": {
+    "default": "9",
+    "shift": "("
+  },
+  "0": {
+    "default": "0",
+    "shift": ")"
+  },
+  "-": {
+    "default": "-",
+    "shift": "_"
+  },
+  "=": {
+    "default": "=",
+    "shift": "+"
+  },
+  "q": {
+    "default": "й",
+    "caps": "Й",
+    "shift": "Й"
+  },
+  "w": {
+    "default": "ц",
+    "caps": "Ц",
+    "shift": "Ц"
+  },
+  "e": {
+    "default": "у",
+    "caps": "У",
+    "shift": "У"
+  },
+  "r": {
+    "default": "к",
+    "caps": "К",
+    "shift": "К"
+  },
+  "t": {
+    "default": "е",
+    "caps": "Е",
+    "shift": "Е"
+  },
+  "y": {
+    "default": "н",
+    "caps": "Н",
+    "shift": "Н"
+  },
+  "u": {
+    "default": "г",
+    "caps": "Г",
+    "shift": "Г"
+  },
+  "i": {
+    "default": "ш",
+    "caps": "Ш",
+    "shift": "Ш"
+  },
+  "o": {
+    "default": "щ",
+    "caps": "Щ",
+    "shift": "Щ"
+  },
+  "p": {
+    "default": "з",
+    "caps": "З",
+    "shift": "З"
+  },
+  "[": {
+    "default": "х",
+    "caps": "Х",
+    "shift": "Х"
+  },
+  "]": {
+    "default": "ї",
+    "caps": "Ї",
+    "shift": "Ї"
+  },
+  "\\": {
+    "default": "\\",
+    "shift": "/"
+  },
+  "a": {
+    "default": "ф",
+    "caps": "Ф",
+    "shift": "Ф"
+  },
+  "s": {
+    "default": "і",
+    "caps": "І",
+    "shift": "І"
+  },
+  "d": {
+    "default": "в",
+    "caps": "В",
+    "shift": "В"
+  },
+  "f": {
+    "default": "а",
+    "caps": "А",
+    "shift": "А"
+  },
+  "g": {
+    "default": "п",
+    "caps": "П",
+    "shift": "П"
+  },
+  "h": {
+    "default": "р",
+    "caps": "Р",
+    "shift": "Р"
+  },
+  "j": {
+    "default": "о",
+    "caps": "О",
+    "shift": "О"
+  },
+  "k": {
+    "default": "л",
+    "caps": "Л",
+    "shift": "Л"
+  },
+  "l": {
+    "default": "д",
+    "caps": "Д",
+    "shift": "Д"
+  },
+  ";": {
+    "default": "ж",
+    "caps": "Ж",
+    "shift": "Ж"
+  },
+  "'": {
+    "default": "є",
+    "caps": "Є",
+    "shift": "Є"
+  },
+  "z": {
+    "default": "я",
+    "caps": "Я",
+    "shift": "Я"
+  },
+  "x": {
+    "default": "ч",
+    "caps": "Ч",
+    "shift": "Ч"
+  },
+  "c": {
+    "default": "с",
+    "caps": "С",
+    "shift": "С"
+  },
+  "v": {
+    "default": "м",
+    "caps": "М",
+    "shift": "М"
+  },
+  "b": {
+    "default": "и",
+    "caps": "И",
+    "shift": "И"
+  },
+  "n": {
+    "default": "т",
+    "caps": "Т",
+    "shift": "Т"
+  },
+  "m": {
+    "default": "ь",
+    "caps": "Ь",
+    "shift": "Ь"
+  },
+  ",": {
+    "default": "б",
+    "caps": "Б",
+    "shift": "Б"
+  },
+  ".": {
+    "default": "ю",
+    "caps": "Ю",
+    "shift": "Ю"
+  },
+  "/": {
+    "default": ".",
+    "shift": ","
+  }
+}
