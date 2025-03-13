@@ -1,28 +1,27 @@
-import { useEffect, useRef } from "react";
-import socket from "@/sockets";
+import { useEffect, useState } from 'react';
+import socket from '@/socket';
 
-function useTouches(video) {
-    const disableInteractions = useRef(false);
+function useTouches(stream) {
+    const [touches, setTouches] = useState(true);
 
     const convertPosition = (x, y) => ({
-        x: Math.round(x * (video.videoWidth / video.offsetWidth)),
-        y: Math.round(y * (video.videoHeight / video.offsetHeight))
+        x: Math.round(x * (stream.width / stream.offsetWidth)),
+        y: Math.round(y * (stream.height / stream.offsetHeight))
     });
 
     useEffect(() => {
-        if (!video) return;
+        if (!stream) return;
         let state = '';
         let position = { x: 0, y: 0 };
         let interval;
         let time = 0;
 
-        const send = (action, position) => {
+        const send = (action, position) =>
             socket.emit(`touch:${action}`, position.x, position.y);
-        }
 
         const down = (e) => {
             const now = Date.now();
-            if (state || disableInteractions.current) return;
+            if (state || !touches) return;
             time = now;
             state = 'down';
             position = convertPosition(e.offsetX, e.offsetY);
@@ -33,7 +32,7 @@ function useTouches(video) {
         }
 
         const move = (e) => {
-            if (!state || disableInteractions.current) return;
+            if (!state || !touches) return;
             state = 'update';
             position = convertPosition(e.offsetX, e.offsetY);
             send('update', position);
@@ -42,7 +41,7 @@ function useTouches(video) {
         }
 
         const up = () => {
-            if (disableInteractions.current) return;
+            if (!touches) return;
             state = 'up';
             send('up', position);
             if (interval) {
@@ -52,16 +51,18 @@ function useTouches(video) {
             setTimeout(() => state = '', 250);
         }
 
-        video.addEventListener('pointerdown', down);
-        video.addEventListener('pointermove', move);
-        video.addEventListener('pointerup', up);
+        stream.addEventListener('pointerdown', down);
+        stream.addEventListener('pointermove', move);
+        stream.addEventListener('pointerup', up);
 
         return () => {
-            video.removeEventListener('pointerdown', down);
-            video.removeEventListener('pointermove', move);
-            video.removeEventListener('pointerup', up);
+            stream.removeEventListener('pointerdown', down);
+            stream.removeEventListener('pointermove', move);
+            stream.removeEventListener('pointerup', up);
         }
-    }, [video]);
+    }, [stream, touches]);
+
+    return { touches, setTouches };
 }
 
 export default useTouches;

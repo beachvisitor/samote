@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
-import api from "./api";
-import { toast } from "sonner";
-import socket from "@/sockets.jsx";
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import api from '@/api';
+import { toast } from 'sonner';
+import socket from '@/socket';
 
 const DataContext = React.createContext(null);
 
@@ -44,11 +44,6 @@ function DataProvider({ children }) {
         fetch().then();
     }, []);
 
-    useEffect(() => {
-        handleLanguage(settings.language);
-        handleTheme(settings.theme || localStorage.getItem('theme'));
-    }, [settings]);
-
     const saveSettings = (data = settings) => {
         return api.post(`api/settings`, data)
             .then(() => {
@@ -57,6 +52,16 @@ function DataProvider({ children }) {
             })
             .catch(() => toast.error(language?.messages?.save?.error));
     };
+
+    useEffect(() => {
+        const theme = settings.theme || localStorage.getItem('theme');
+        handleLanguage(settings.language);
+        handleTheme(theme);
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const listener = () => handleTheme(theme);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
+    }, [settings]);
 
     const handleLanguage = (id) => {
         setLanguage(languages.current[prepareLanguage(id)]);
@@ -68,27 +73,6 @@ function DataProvider({ children }) {
         window.document.documentElement.classList.remove('light', 'dark');
         window.document.documentElement.classList.add(theme);
         setTheme(theme);
-    };
-
-    useEffect(() => {
-        api.post(`/api/user/verify`)
-            .then(res => setUser(res.data))
-            .catch(() => setUser(null));
-
-        socket.on('user:modify', setUser);
-        return () => socket.off('user:modify', setUser);
-    }, []);
-
-    const auth = (password) => {
-        api.post(`/api/user/auth`, { password })
-            .then(() => toast.success(language?.messages?.auth?.success))
-            .catch(e => {
-                toast.error(
-                    e?.response?.status === 400
-                    ? language?.messages?.auth?.wrong
-                    : language?.messages?.auth?.error
-                );
-            });
     };
 
     const prepareLanguage = (id) => {
@@ -110,8 +94,26 @@ function DataProvider({ children }) {
     };
 
     useEffect(() => {
-        socket.on('stream:state', setState);
-        return () => socket.off('stream:state', setState);
+        api.post(`/api/user/verify`).catch(() => setUser(null));
+        socket.on('user:modify', setUser);
+        return () => socket.off('user:modify', setUser);
+    }, []);
+
+    const auth = (password) => {
+        api.post(`/api/user/auth`, { password })
+            .then(() => toast.success(language?.messages?.auth?.success))
+            .catch(e => {
+                const dict = {
+                    400: language?.messages?.auth?.wrong,
+                    429: language?.messages?.limit,
+                };
+                toast.error(dict[e?.response?.status] || language?.messages?.auth?.error);
+            });
+    };
+
+    useEffect(() => {
+        socket.on('stream:update', setState);
+        return () => socket.off('stream:update', setState);
     }, []);
 
     const handleStream = (path) => {

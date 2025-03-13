@@ -1,8 +1,8 @@
 import axios from 'axios';
-import socket from '@/sockets';
+import socket from '@/socket';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3001'
+    baseURL: 'http://localhost:5473'
 });
 
 const waitSocket = () => {

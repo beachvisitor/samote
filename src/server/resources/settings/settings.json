@@ -1,8 +1,0 @@
-{
-  "open": true,
-  "start": true,
-  "password": "",
-  "language": "auto",
-  "theme": "auto",
-  "arguments": "-nostats -framerate 30 -c:v libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -profile:v baseline -level 3.1 -bf 0 -muxdelay 0.001 -crf 20 -maxrate 3000k -bufsize 6000k -rtbufsize 100M -g 50"
-}

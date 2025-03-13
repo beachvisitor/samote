@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Loader from '@/loader';
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn } from 'react-icons/fi';
 import { useData } from '@/data';
 
 function Auth() {

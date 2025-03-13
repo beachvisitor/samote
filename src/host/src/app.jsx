@@ -1,30 +1,30 @@
 import { useState, useEffect} from 'react';
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 import {
     Card,
     CardContent,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuCheckboxItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
     Table,
     TableBody,
@@ -32,7 +32,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
     Sheet,
     SheetContent,
@@ -40,26 +40,20 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/sheet';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { FaPlay, FaPause, FaRotate, FaMinus } from 'react-icons/fa6';
 import { IoSettingsSharp, IoClose } from 'react-icons/io5';
-import { HiDotsHorizontal } from "react-icons/hi";
-import socket from '@/sockets';
+import { HiDotsHorizontal } from 'react-icons/hi';
+import socket from '@/socket';
 import Loader from '@/loader';
+import logo from '@/logo.png';
 import { useData } from '@/data';
+import '@/executor';
 
 function App() {
-    const DEFAULT_SETTINGS = {
-        "open": true,
-        "start": true,
-        "password": "",
-        "language": "auto",
-        "theme": "auto",
-        "arguments": "-nostats -framerate 30 -c:v libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -profile:v baseline -level 3.1 -bf 0 -muxdelay 0.001 -crf 20 -maxrate 3000k -bufsize 6000k -rtbufsize 100M -g 50"
-    };
     const [users, setUsers] = useState({});
     const [localSettings, setLocalSettings] = useState({});
     const [url, setUrl] = useState('');
@@ -131,15 +125,25 @@ function App() {
     const setting = (obj) => setLocalSettings(prev => ({ ...prev, ...obj }));
 
     useEffect(() => {
-        socket.on('url:set', setUrl);
-        return () => socket.off('url:set', setUrl);
+        socket.on('url:update', setUrl);
+        return () => socket.off('url:update', setUrl);
     }, []);
 
+    useEffect(() => {
+        window.electronAPI?.tray?.({
+            0: language?.host?.tray?.open,
+            1: language?.host?.tray?.quit
+        });
+    }, [language]);
+
     return (
-        <div className={'flex flex-col p-12 overflow-auto h-screen'} style={{gap: '5%'}}>
+        <div className={'flex flex-col p-12 gap-8 overflow-auto h-screen'}>
             <Loader active={loading}/>
-            <div className={'flex items-center justify-between'}>
-                <h2 className={'text-4xl font-bold tracking-tight'} style={{'-webkit-app-region': 'drag'}}>Samote</h2>
+            <div className={'basis-1/1 flex items-center justify-between'}>
+                <div className={'flex items-end gap-4'} style={{'WebkitAppRegion': 'drag'}}>
+                    <img src={logo} alt={'Logo'} className={'w-9 h-9'}/>
+                    <h2 className={'text-4xl font-bold tracking-tight'}>Samote</h2>
+                </div>
                 <div className={'flex items-center space-x-2'}>
                     <Sheet onOpenChange={(state) => state && setting(settings)}>
                         <SheetTrigger asChild>
@@ -149,14 +153,14 @@ function App() {
                         </SheetTrigger>
                         <SheetContent className={'flex flex-col md:min-w-[30%]'}>
                             <SheetHeader>
-                                <SheetTitle className={'text-xl font-bold'}>{language?.app?.settings?.title}</SheetTitle>
+                                <SheetTitle className={'text-2xl font-bold'}>{language?.host?.settings?.title}</SheetTitle>
                             </SheetHeader>
-                            <div className={'grid gap-5 px-1 py-4 overflow-auto'}>
+                            <div className={'grid gap-5 px-1 py-1 overflow-auto'}>
                                 <div className={'flex items-center justify-between space-x-2'}>
                                     <Label htmlFor={'open'} className={'text-md flex flex-col space-y-1'}>
-                                        <span>{language?.app?.settings?.open?.label}</span>
+                                        <span>{language?.host?.settings?.open?.label}</span>
                                         <span className={'font-normal leading-snug text-muted-foreground'}>
-                                            {language?.app?.settings?.open?.description}
+                                            {language?.host?.settings?.open?.description}
                                         </span>
                                     </Label>
                                     <Switch
@@ -166,10 +170,23 @@ function App() {
                                     />
                                 </div>
                                 <div className={'flex items-center justify-between space-x-2'}>
-                                    <Label htmlFor={'start'} className={'text-md flex flex-col space-y-1'}>
-                                        <span>{language?.app?.settings?.start?.label}</span>
+                                    <Label htmlFor={'hide'} className={'text-md flex flex-col space-y-1'}>
+                                        <span>{language?.host?.settings?.hide?.label}</span>
                                         <span className={'font-normal leading-snug text-muted-foreground'}>
-                                            {language?.app?.settings?.start?.description}
+                                            {language?.host?.settings?.hide?.description}
+                                        </span>
+                                    </Label>
+                                    <Switch
+                                        id={'hide'}
+                                        onCheckedChange={hide => setting({ hide })}
+                                        checked={localSettings?.hide}
+                                    />
+                                </div>
+                                <div className={'flex items-center justify-between space-x-2'}>
+                                    <Label htmlFor={'start'} className={'text-md flex flex-col space-y-1'}>
+                                        <span>{language?.host?.settings?.start?.label}</span>
+                                        <span className={'font-normal leading-snug text-muted-foreground'}>
+                                            {language?.host?.settings?.start?.description}
                                         </span>
                                     </Label>
                                     <Switch
@@ -180,7 +197,7 @@ function App() {
                                 </div>
                                 <div className={'grid gap-3'}>
                                     <Label htmlFor={'password'}
-                                           className={'text-md'}>{language?.app?.settings?.password}</Label>
+                                           className={'text-md'}>{language?.host?.settings?.password}</Label>
                                     <Input
                                         id={'password'}
                                         onChange={(e) => setting({password: e.target.value})}
@@ -190,7 +207,7 @@ function App() {
                                 </div>
                                 <div className={'grid gap-3'}>
                                     <Label htmlFor={'language'}
-                                           className={'text-md'}>{language?.app?.settings?.language?.label}</Label>
+                                           className={'text-md'}>{language?.host?.settings?.language?.label}</Label>
                                     <Select
                                         onValueChange={language => setting({ language })}
                                         value={localSettings?.language}
@@ -199,7 +216,7 @@ function App() {
                                             <SelectValue/>
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value={'auto'}>{language?.app?.settings?.language?.auto}</SelectItem>
+                                            <SelectItem value={'auto'}>{language?.host?.settings?.language?.auto}</SelectItem>
                                             {Object.entries(languages.current || {}).map(([key, value]) => (
                                                 <SelectItem key={key} value={key}>{value?.name}</SelectItem>
                                             ))}
@@ -208,7 +225,7 @@ function App() {
                                 </div>
                                 <div className={'grid gap-3'}>
                                     <Label htmlFor={'theme'}
-                                           className={'text-md'}>{language?.app?.settings?.theme?.label}</Label>
+                                           className={'text-md'}>{language?.host?.settings?.theme?.label}</Label>
                                     <Select
                                         onValueChange={theme => setting({ theme })}
                                         value={localSettings?.theme}
@@ -218,20 +235,20 @@ function App() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value={'auto'}>
-                                                {language?.app?.settings?.theme?.auto}
+                                                {language?.host?.settings?.theme?.auto}
                                             </SelectItem>
                                             <SelectItem value={'light'}>
-                                                {language?.app?.settings?.theme?.light}
+                                                {language?.host?.settings?.theme?.light}
                                             </SelectItem>
                                             <SelectItem value={'dark'}>
-                                                {language?.app?.settings?.theme?.dark}
+                                                {language?.host?.settings?.theme?.dark}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className={'grid gap-3'}>
                                     <Label htmlFor={'arguments'}
-                                           className={'text-md'}>{language?.app?.settings?.arguments}</Label>
+                                           className={'text-md'}>{language?.host?.settings?.arguments}</Label>
                                     <Textarea
                                         rows={3}
                                         id={'arguments'}
@@ -243,18 +260,18 @@ function App() {
                             </div>
                             <SheetFooter>
                                 <Button
-                                    onClick={() => setting(DEFAULT_SETTINGS)}
+                                    onClick={() => setting(settings.default)}
                                     variant={'destructive'}
                                     className={'p-5'}
                                 >
-                                    {language?.app?.settings?.reset}
+                                    {language?.host?.settings?.reset}
                                 </Button>
                                 <Button
                                     onClick={save}
                                     disabled={JSON.stringify(settings) === JSON.stringify(localSettings)}
                                     className={'p-5 px-8'}
                                 >
-                                    {language?.app?.settings?.save}
+                                    {language?.host?.settings?.save}
                                 </Button>
                             </SheetFooter>
                         </SheetContent>
@@ -262,21 +279,21 @@ function App() {
                     <Button onClick={() => window.electronAPI?.minimize?.()} variant={'ghost'} className={'p-3 rounded-full w-max h-max'}>
                         <FaMinus className={'!w-6 !h-6'}/>
                     </Button>
-                    <Button onClick={() => window.electronAPI?.close?.()} variant={'ghost'} className={'p-2 rounded-full w-max h-max'}>
+                    <Button onClick={(e) => window.electronAPI?.[e.shiftKey ? 'quit' : 'close']?.()} variant={'ghost'} className={'p-2 rounded-full w-max h-max'}>
                         <IoClose className={'!w-8 !h-8'}/>
                     </Button>
                 </div>
             </div>
-            <div className={'w-full sm:grid-cols-2 md:grid-cols-7 scrollbar-hide'} style={{height: '70%'}}>
-                <Card className={'w-full h-full'}>
-                    <CardContent className={'p-0'}>
+            <div className={'flex-1 w-full h-[50%] sm:grid-cols-2 md:grid-cols-7 scrollbar-hide'}>
+                <Card className={'w-full h-full overflow-auto'}>
+                    <CardContent className={'p-0 overflow-auto'}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className={'w-[200px] text-xl pl-5 py-5'}>{language?.app?.users?.ip}</TableHead>
-                                    <TableHead className={'w-[225px] text-xl py-5'}>{language?.app?.users?.system}</TableHead>
-                                    <TableHead className={'text-xl py-5'}>{language?.app?.users?.browser}</TableHead>
-                                    <TableHead className="text-right text-xl pr-5 py-5">{language?.app?.users?.modify?.label}</TableHead>
+                                    <TableHead className={'w-[200px] text-xl pl-5 py-5'}>{language?.host?.users?.ip}</TableHead>
+                                    <TableHead className={'w-[225px] text-xl py-5'}>{language?.host?.users?.system}</TableHead>
+                                    <TableHead className={'text-xl py-5'}>{language?.host?.users?.browser}</TableHead>
+                                    <TableHead className="text-right text-xl pr-5 py-5">{language?.host?.users?.modify?.label}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -299,7 +316,7 @@ function App() {
                                                         checked={user.access?.view}
                                                         onCheckedChange={(view) => modify(id, { access: { ...user.access, view } })}
                                                     >
-                                                        {language?.app?.users?.modify?.view}
+                                                        {language?.host?.users?.modify?.view}
                                                     </DropdownMenuCheckboxItem>
                                                     <DropdownMenuCheckboxItem
                                                         className={'text-md'}
@@ -307,7 +324,7 @@ function App() {
                                                         checked={user.access?.touch}
                                                         onCheckedChange={(touch) => modify(id, { access: { ...user.access, touch } })}
                                                     >
-                                                        {language?.app?.users?.modify?.touch}
+                                                        {language?.host?.users?.modify?.touch}
                                                     </DropdownMenuCheckboxItem>
                                                     <DropdownMenuCheckboxItem
                                                         className={'text-md'}
@@ -315,7 +332,7 @@ function App() {
                                                         checked={user.access?.keyboard}
                                                         onCheckedChange={(keyboard) => modify(id, { access: { ...user.access, keyboard } })}
                                                     >
-                                                        {language?.app?.users?.modify?.keyboard}
+                                                        {language?.host?.users?.modify?.keyboard}
                                                     </DropdownMenuCheckboxItem>
                                                     <DropdownMenuCheckboxItem
                                                         className={'text-md text-destructive font-medium'}
@@ -323,7 +340,7 @@ function App() {
                                                         checked={user.auth}
                                                         onCheckedChange={(auth) => modify(id, { auth })}
                                                     >
-                                                        {language?.app?.users?.modify?.auth}
+                                                        {language?.host?.users?.modify?.auth}
                                                     </DropdownMenuCheckboxItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -335,10 +352,9 @@ function App() {
                     </CardContent>
                 </Card>
             </div>
-            <div className={'flex items-center gap-5'} style={{height: '15%'}}>
+            <div className={'basis-1/1 flex items-center gap-5'}>
                 <Input
                     readOnly
-                    onChange={(e) => setting({host: e.target.value})}
                     defaultValue={url}
                     className={'!text-2xl py-7'}
                 />
@@ -353,12 +369,12 @@ function App() {
                                 <FaRotate/>
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent className={'text-md'}>{language?.app?.reload}</TooltipContent>
+                        <TooltipContent className={'text-md'}>{language?.host?.reload}</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
                 <Button
                     onClick={() => !state ? start() : stop()}
-                    className={'text-2xl px-20 py-7'}
+                    className={'text-2xl px-16 min-w-64 py-7'}
                 >
                     <div
                         className={cn(
@@ -367,7 +383,7 @@ function App() {
                         )}
                     >
                         <FaPlay className={'!w-4 !h-4'}/>
-                        {language?.app?.start}
+                        {language?.host?.start}
                     </div>
                     <div
                         className={cn(
@@ -376,7 +392,7 @@ function App() {
                         )}
                     >
                         <FaPause className={'!w-5 !h-5'}/>
-                        {language?.app?.stop}
+                        {language?.host?.stop}
                     </div>
                 </Button>
             </div>

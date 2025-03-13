@@ -1,10 +1,11 @@
 {
-  "name": "samote",
-  "version": "0.0.0",
+  "name": "Samote",
+  "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
     "dev": "set DEV=true && electron .",
+    "web": "npm run --prefix ./src/host build && npm run --prefix ./src/client build",
     "build": "electron-builder"
   },
   "keywords": [],
@@ -14,7 +15,7 @@
   "devDependencies": {
     "@electron/rebuild": "^3.7.1",
     "electron": "^33.2.1",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^26.0.10"
   },
   "dependencies": {
     "arole": "^1.1.2",
@@ -23,20 +24,23 @@
     "dotenv": "^16.4.7",
     "electron-is-dev": "^2.0.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
     "http-proxy-middleware": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
     "shell-quote": "^1.8.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "ua-parser-js": "^2.0.2",
-    "uuid": "^11.1.0",
-    "ws": "^8.18.1"
+    "uuid": "^11.1.0"
   },
   "build": {
     "productName": "Samote",
     "appId": "org.samson.Samote",
+    "copyright": "© 2025 Normal Ped",
     "win": {
-      "target": "nsis"
+      "asar": true,
+      "target": "nsis",
+      "icon": "./logo.ico"
     },
     "directories": {
       "output": "build"
@@ -45,7 +49,7 @@
       "**/*",
       "!src/host/**/*",
       "!src/client/**/*",
-      "!src/server/resources/**/*"
+      "!src/libs/**/*"
     ],
     "extraResources": [
       {
@@ -57,16 +61,14 @@
         "to": "../resources/client/build"
       },
       {
-        "from": "src/server/resources",
-        "to": "..",
-        "filter": ["!**/*.log"]
+        "from": "src/libs",
+        "to": "../resources/libs"
       }
     ],
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Samote"

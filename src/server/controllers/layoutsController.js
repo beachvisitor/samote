@@ -1,5 +1,5 @@
 const ApiError = require('../error');
-const layouts = require('../layouts');
+const layouts = require('../../layouts');
 
 class LayoutsController {
     get(req, res, next) {

@@ -1,5 +1,5 @@
 const ApiError = require('../error');
-const languages = require('../languages');
+const languages = require('../../languages');
 
 class LanguagesController {
     get(req, res, next) {
