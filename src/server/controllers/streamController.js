@@ -1,5 +1,5 @@
 const ApiError = require('../error');
-const stream = require('../stream');
+const stream = require('../../stream');
 
 const handle = (func) => async (req, res, next) => {
     try {

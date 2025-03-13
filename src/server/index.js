@@ -1,25 +1,19 @@
-const express = require("express");
-const path = require("path");
-const { createServer } = require("http");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const fs = require("fs");
-const router = require('./routes');
-const Sockets = require('./sockets');
-const errorMiddleware = require('./middleware/errorMiddleware');
+const express = require('express');
+const path = require('path');
+const { createServer } = require('http');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
-const Addons = require("./addons");
-const logger = require("./logger");
-const url = require('./url');
-const media = require('./media');
-const { WebSocketServer } = require('ws');
-const { findIP, findPort, read, randomKey } = require('./utils');
+const errorMiddleware = require('./middleware/errorMiddleware');
+const api = require('../api');
+const router = require('./routes');
+const sockets = require('./sockets');
+const url = require('../url');
+const { findIP } = require('../utils');
 
 const app = express();
 const server = createServer(app);
-
-Addons.load();
-Sockets.init(server);
-media.start().catch(console.log);
+api.update({ server, express: app });
+sockets.init(server);
 
 const proxyMiddleware = createProxyMiddleware({
     target: 'http://localhost:5174',
@@ -34,20 +28,21 @@ app.use(router);
 app.use(process.env.DEV ? proxyMiddleware : staticMiddleware);
 app.use(errorMiddleware);
 
-findPort(3001).then((port) => {
-    process.env.PORT = String(port);
-    server.listen(port, () => {
-        console.log(`Listening on port ${port}`);
-    });
-    const string = `http://${findIP()}:${port}`;
-    url.def = string;
-    url.set(string);
-}).catch(console.error);
+process.env.PORT = '5473';
+server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
 
-process.on('beforeExit', Addons.unload);
-process.on('SIGINT', () => {
-    Addons.unload();
-    process.exit(0);
-});
+let ip;
+
+const updateURL = () => {
+    const found = findIP();
+    const string = `http://${found}:${process.env.PORT}`;
+    if (found !== ip) {
+        ip = found;
+        url.update(string);
+    }
+}
+
+updateURL();
+setInterval(updateURL, 1500);
 
 module.exports = server;

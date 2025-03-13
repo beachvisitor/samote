@@ -1,6 +1,6 @@
 const ApiError = require('../error');
-const users = require('../users');
-const settings = require('../settings');
+const users = require('../../users');
+const settings = require('../../settings');
 
 class UserController {
     auth(req, res, next) {

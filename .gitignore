@@ -1,7 +1,6 @@
 .idea
+.vite
 build
 node_modules
-*.log
 *.env
-src/server/resources/addons*
 package-lock.json

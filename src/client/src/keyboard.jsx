@@ -5,7 +5,7 @@ import { PiArrowsDownUpBold } from "react-icons/pi";
 import { IoArrowBack } from "react-icons/io5";
 import { LuArrowUpToLine } from "react-icons/lu";
 import { RiFileListLine } from "react-icons/ri";
-import socket from '@/sockets';
+import socket from '@/socket';
 import { useData } from '@/data';
 
 const KeyboardContext = React.createContext(null);
@@ -17,7 +17,7 @@ function Key({ data, size }) {
     return (
         <div
             key={data}
-            className={`flex-grow w-[20px] cursor-pointer touch-none select-none h-10 flex flex-col justify-center items-center bg-secondary text-secondary-foreground shadow-sm rounded-[3px]`}
+            className={`flex-grow w-[20px] cursor-pointer touch-none select-none h-10 flex flex-col justify-center items-center bg-muted text-secondary-foreground shadow-sm rounded-[3px]`}
             style={size ? { flex: size } : {}}
             onClick={(e) => onClick && onClick(e, data)}
             onPointerDown={(e) => onDown && onDown(e, data)}
@@ -139,14 +139,14 @@ function Keyboard(props) {
             return [...prev, key];
         });
         const target = e.currentTarget || e.target;
-        target.classList.add('bg-secondary/80');
+        target.classList.add('bg-muted/75');
     }
 
     const onUp = (e, key) => {
         send('up', key);
         if (!onlyOnDown.includes(key)) setActive(prev => prev.filter(item => item !== key));
         const target = e.currentTarget || e.target;
-        target.classList.remove('bg-secondary/80');
+        target.classList.remove('bg-muted/75');
     }
 
     useEffect(() => {

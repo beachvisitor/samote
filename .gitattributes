@@ -1,2 +1,1 @@
-src/server/resources/libs/ffmpeg/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text
-src/server/resources/libs/mediamtx/mediamtx.exe filter=lfs diff=lfs merge=lfs -text
+src/libs/ffmpeg/ffmpeg.exe filter=lfs diff=lfs merge=lfs -text

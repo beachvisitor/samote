@@ -1,5 +1,5 @@
 const { Server } = require('socket.io');
-const events = require('../events');
+const events = require('../../events');
 
 class Sockets {
     io;

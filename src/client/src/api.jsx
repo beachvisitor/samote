@@ -1,5 +1,5 @@
 import axios from 'axios';
-import socket from '@/sockets';
+import socket from '@/socket';
 
 const api = axios.create({
     baseURL: location.origin
